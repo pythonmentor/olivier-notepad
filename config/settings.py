@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'django_countries',
     
-    'accounts',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext, gettext_lazy as _
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
 
+
+@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -14,14 +17,24 @@ class CustomUserAdmin(UserAdmin):
         'username',
         'first_name', 
         'last_name',
+        'date_of_birth', 
+
     ]
 
-add_fieldsets = UserAdmin.add_fieldsets + (
-    (None, {'fields': ('email', 'first_name', 'last_name', 'display_name', 'date_of_birth', 'address1', 'address2', 'zip_code', 'city', 'country', 'mobile_phone', 'additional_information', 'photo',)}),
-)
-fieldsets = UserAdmin.fieldsets + (
-    (None, {'fields': ('display_name', 'date_of_birth', 'address1', 'address2', 'zip_code', 'city', 'country', 'mobile_phone', 'additional_information', 'photo',)}),
-)
-
-admin.site.register(CustomUser, CustomUserAdmin)
-
+fieldsets = (
+    (None, {'fields' : ('username', 'password')},
+    (_('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'date_of_birth')}),
+    (
+        _('Permissions'),
+        {
+            'fields' : (
+                'is_active',
+                'is_staff',
+                'is_superuser',
+                'groups',
+                'user_permissions',
+            ),
+        },
+    ),
+    (_('important dates'), {'fields' : ('last_login', 'date_joined')}),
+        ))
